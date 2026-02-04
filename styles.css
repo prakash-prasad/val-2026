@@ -1,0 +1,164 @@
+/**
+ * Infinite Love - Custom Styles
+ * Complements Tailwind CSS with component-specific styling
+ */
+
+/* Global Reset & Font Assignment */
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+}
+
+/* App Container */
+#app {
+    position: relative;
+}
+
+/* Button Base Styles - Scoped to valentine buttons */
+.valentine-btn {
+    min-width: 140px;
+    min-height: 48px; /* Minimum 48x48px touch target per PRD */
+    padding: 12px 24px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    border-radius: 9999px; /* Pill shape */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+}
+
+/* Primary "Yes" Button */
+.btn-primary {
+    background-color: #C41E3A; /* Crimson Red */
+    color: white;
+    border: 2px solid #C41E3A;
+}
+
+.btn-primary:hover {
+    background-color: #A01830;
+    border-color: #A01830;
+    box-shadow: 0 10px 15px -3px rgba(196, 30, 58, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary "No" Button */
+.btn-secondary {
+    background-color: #FFB6C1; /* Soft Pink */
+    color: #333333;
+    border: 2px solid #FFB6C1;
+}
+
+.btn-secondary:hover {
+    background-color: #FF9EAC;
+    border-color: #FF9EAC;
+    box-shadow: 0 10px 15px -3px rgba(255, 182, 193, 0.4);
+}
+
+/* When button is in evasive mode */
+.btn-secondary.evasive {
+    position: absolute !important;
+    transition: none !important; /* Instant movement */
+}
+
+/* Disabled state */
+.valentine-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Focus states for keyboard navigation */
+.valentine-btn:focus-visible {
+    outline: none;
+    ring: 4px;
+}
+
+/* Animation Utilities for Page Transitions */
+.fade-out {
+    opacity: 0 !important;
+}
+
+.fade-in {
+    opacity: 1 !important;
+}
+
+/* Loading Overlay */
+#loading-overlay {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Image Loading State */
+#image-loading {
+    transition: opacity 0.2s ease;
+}
+
+#image-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Smooth image appearance */
+#storyImage {
+    opacity: 0;
+}
+
+#storyImage.loaded {
+    opacity: 1;
+}
+
+/* Confetti Canvas (injected by library) */
+canvas {
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+    .valentine-btn {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+    
+    #buttons {
+        padding: 0 20px;
+    }
+}
+
+/* Prevent text selection during button evasion */
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .valentine-btn.evasive {
+        transition: all 0.2s ease !important;
+    }
+}
