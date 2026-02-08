@@ -67,11 +67,17 @@ function initApp() {
 
 /**
  * Sets up global image error handling with fallback
+ * Tries imageFallback from current node before falling back to SVG placeholder
  */
 function setupImageErrorHandling() {
     imageEl.onerror = () => {
+        const node = currentNodeId && STORY_CONFIG.nodes[currentNodeId];
+        const fallbackUrl = node && node.imageFallback;
+        if (fallbackUrl && imageEl.src !== fallbackUrl) {
+            imageEl.src = fallbackUrl;
+            return;
+        }
         console.warn(`Failed to load image: ${imageEl.src}`);
-        // SVG placeholder heart
         imageEl.src = 'data:image/svg+xml,' + encodeURIComponent(`
             <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#FFB6C1">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -110,7 +116,10 @@ function renderNode(id) {
         imageLoadingEl.classList.remove('hidden');
         imageEl.classList.remove('loaded');
         imageEl.src = node.image;
-        wittyEl.textContent = node.wittyLine;
+        // Support wittyLines (array) for random selection, or wittyLine (string)
+        wittyEl.textContent = Array.isArray(node.wittyLines)
+            ? node.wittyLines[Math.floor(Math.random() * node.wittyLines.length)]
+            : node.wittyLine;
         questionEl.textContent = node.question;
 
         // Reset UI State
@@ -134,25 +143,31 @@ function renderNode(id) {
 /**
  * Sets up buttons for user interaction
  * CORRECTED: Proper evasive button activation logic
+ * Supports yesOnly nodes (only Yes button, no No button)
+ * ending_no shows both buttons with evasive No (runs away from cursor)
  */
 function handleInteractiveNode(node) {
     buttonsDiv.style.display = "flex";
     
-    // Assign Click Handlers
+    // Yes-only nodes: hide No button, only show Yes (ending_no is NOT yesOnly - it has evasive No)
+    if (node.yesOnly === true) {
+        noBtn.style.display = "none";
+        yesBtn.onclick = () => goTo(node.yes_target);
+        return;
+    }
+    
+    // Normal nodes: show both buttons
+    noBtn.style.display = "";
     yesBtn.onclick = () => goTo(node.yes_target);
     noBtn.onclick = () => goTo(node.no_target);
 
-    // CORRECTED LOGIC: Check if THIS is the final question
-    // A node is the final question if:
-    // 1. It's not terminal itself
-    // 2. The YES path leads to a terminal node
-    // 3. The NO path either loops back or also leads to terminal
+    // Evasive logic: activate when node has both buttons and Yes leads to terminal
+    // (covers stage_yes_bridge, no_stage_5, and ending_no)
     const yesTarget = STORY_CONFIG.nodes[node.yes_target];
-    const noTarget = STORY_CONFIG.nodes[node.no_target];
-    
     const isFinalQuestion = !node.isTerminal && 
-                           yesTarget && yesTarget.isTerminal &&
-                           (noTarget && (noTarget.isTerminal || node.no_target === currentNodeId));
+                           !node.yesOnly && 
+                           node.no_target != null &&
+                           yesTarget && yesTarget.isTerminal;
 
     if (isFinalQuestion) {
         activateEvasiveButton();
@@ -179,6 +194,9 @@ function handleTerminalNode() {
 function resetButtons() {
     // Deactivate evasive mode
     deactivateEvasiveButton();
+    
+    // Restore No button visibility (in case it was hidden on a yesOnly node)
+    noBtn.style.display = "";
     
     // Reset button styles
     noBtn.classList.remove('evasive');
