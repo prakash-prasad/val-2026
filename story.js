@@ -30,27 +30,25 @@ const STORY_CONFIG = {
             "isTerminal": false
         },
         "stage2_romantic": {
-            "image": "images/stage2_romantic.gif",
+            "image": "images/stage2_romantic.jpeg",
             "imageFallback": "https://media.giphy.com/media/26tPqTOGf3MMAaJR6/giphy.gif",
             "wittyLines": [
-                "You chose love. How perfect.",
-                "Love it is. Naturally.",
-                "Perfect choice."
+                "Tuu naa kare mose pyar... 😏 "
             ],
-            "question": "Will you be my Valentine?",
+            "question": "Bb: Main karoon tose pyar 🙈 ",
             "yes_target": "stage_yes_bridge",
             "no_target": "no_stage_1",
             "isTerminal": false
         },
         "stage2_playful": {
-            "image": "images/stage2_playful.gif",
+            "image": "images/stage2_playful.jpeg",
             "imageFallback": "https://media.giphy.com/media/l0HlCqv0jnOM8zUqY/giphy.gif",
             "wittyLines": [
                 "Playing hard to get? I like it.",
                 "So you want to play? Let's see.",
                 "Alright, I see how it is."
             ],
-            "question": "Okay but seriously, Valentine?",
+            "question": "Okay but seriously, say Yes?",
             "yes_target": "stage_yes_bridge",
             "no_target": "no_stage_1",
             "isTerminal": false
@@ -59,56 +57,55 @@ const STORY_CONFIG = {
             "image": "images/stage_yes_bridge.gif",
             "imageFallback": "https://media.giphy.com/media/26tPqTOGf3MMAaJR6/giphy.gif",
             "wittyLines": [
-                "One more step...",
-                "Almost there!",
-                "You're so close!"
+              "You chose love. How perfect. 😍",
+              "You chose yes! I knew you had good taste. 😉",
+              "Yay! You chose yes! 🤩 "
             ],
-            "question": "Ready to say yes for real?",
+            "question": "Will you be my Valentine? 💕",
             "yes_target": "ending_yes",
             "no_target": "no_stage_1",
             "isTerminal": false
         },
         "no_stage_1": {
-            "image": "images/no_stage_1.gif",
+            "image": "images/no_stage_1.jpeg",
             "imageFallback": "https://media.giphy.com/media/l0HlCqv0jnOM8zUqY/giphy.gif",
             "wittyLines": [
                 "Hmm, really?",
                 "You sure about that?",
-                "Okay, first No. Let's try again."
+                "Okay,hmm. Let's try again."
             ],
-            "question": "How about now?",
+            "question": "How about now? 😏",
             "yes_target": "ending_yes",
             "no_target": "no_stage_2",
             "isTerminal": false
         },
         "no_stage_2": {
-            "image": "images/no_stage_2.gif",
+            "image": "images/no_stage_2.jpeg",
             "imageFallback": "https://media.giphy.com/media/l0HlCqv0jnOM8zUqY/giphy.gif",
             "wittyLines": [
                 "Two Nos? You're teasing me.",
                 "Still playing hard to get?",
-                "I'm not giving up."
+                "Dil hai ki patthar? 😏"
             ],
-            "question": "Yes? Pretty please?",
+            "question": "Here is the free snacks button 😋",
             "yes_target": "ending_yes",
             "no_target": "no_stage_3",
             "isTerminal": false
         },
         "no_stage_3": {
-            "image": "images/no_stage_3.gif",
-            "imageFallback": "https://media.giphy.com/media/l0HlCqv0jnOM8zUqY/giphy.gif",
+            "image": "images/no_stage_3.jpeg",
+            "imageFallback": "https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif",
             "wittyLines": [
-                "Three strikes... but I'm persistent.",
-                "Alright, round three.",
-                "I have all day."
+                "I have all day. 😝 ",
+                "Sucha cutie 😏😏 "
             ],
-            "question": "Third time's the charm?",
+            "question": "Third time's the charm? 😏",
             "yes_target": "ending_yes",
-            "no_target": "no_stage_4",
+            "no_target": "ending_no", 
             "isTerminal": false
         },
         "no_stage_4": {
-            "image": "images/no_stage_4.gif",
+            "image": "images/no_stage_4.jpeg",
             "imageFallback": "https://media.giphy.com/media/l0HlCqv0jnOM8zUqY/giphy.gif",
             "wittyLines": [
                 "Fourth No? You're committed.",
@@ -134,22 +131,22 @@ const STORY_CONFIG = {
             "isTerminal": false
         },
         "ending_yes": {
-            "image": "images/ending_yes.gif",
+            "image": "images/ending_yes.jpeg",
             "imageFallback": "https://media.giphy.com/media/3o7TKSjRrfIPjeiVyU/giphy.gif",
-            "wittyLine": "You said yes! I love you to infinity! 💖",
+            "wittyLine": "You said yes! Happy Valentine's Day! 💖",
             "question": "",
             "yes_target": null,
             "no_target": null,
             "isTerminal": true
         },
         "ending_no": {
-            "image": "images/ending_no.gif",
-            "imageFallback": "https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif",
-            "wittyLine": "Wait, you actually clicked No five times? 😮",
+            "image": "images/ending_no.jpeg",
+            "imageFallback": "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTRqeDc4bmV3bWlja2dhNWJpNzQ5NW44bTlzejh6YTF1ZzAwYXNzbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/y93x7gLXTO5dnSWCEI/giphy.gif",
+            "wittyLine": "Wait, you actually clicked No? 😮",
             "question": "The No button must be broken. Try Yes instead?",
             "yes_target": "ending_yes",
             "no_target": "ending_no",
-            "isTerminal": false
+            "isTerminal": true
         }
     }
 };
