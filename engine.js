@@ -14,9 +14,9 @@
 
 // Constants
 const FADE_DURATION = 300; // milliseconds
-const CONFETTI_DURATION = 3000; // milliseconds
+const CONFETTI_DURATION = 5000; // milliseconds
 const PROXIMITY_THRESHOLD = 100; // pixels
-const BUTTON_MARGIN = 20; // pixels from edge
+const BUTTON_MARGIN = 10; // pixels from edge
 
 // Global State
 let currentNodeId = null;
@@ -128,7 +128,7 @@ function renderNode(id) {
 
         // 3. Handle Terminal vs Interactive Nodes
         if (node.isTerminal) {
-            handleTerminalNode();
+            handleTerminalNode(node);
         } else {
             handleInteractiveNode(node);
         }
@@ -161,13 +161,9 @@ function handleInteractiveNode(node) {
     yesBtn.onclick = () => goTo(node.yes_target);
     noBtn.onclick = () => goTo(node.no_target);
 
-    // Evasive logic: activate when node has both buttons and Yes leads to terminal
-    // (covers stage_yes_bridge, no_stage_5, and ending_no)
-    const yesTarget = STORY_CONFIG.nodes[node.yes_target];
-    const isFinalQuestion = !node.isTerminal && 
-                           !node.yesOnly && 
-                           node.no_target != null &&
-                           yesTarget && yesTarget.isTerminal;
+    // Evasive logic: run only when this node itself is marked terminal in config.
+    // Note: handleInteractiveNode runs for non-terminal nodes, so this disables evasion there.
+    const isFinalQuestion = node.isTerminal === true;
 
     if (isFinalQuestion) {
         activateEvasiveButton();
@@ -178,13 +174,39 @@ function handleInteractiveNode(node) {
  * Handles the final celebratory state
  * CORRECTED: Confetti launches after fade-in completes
  */
-function handleTerminalNode() {
-    buttonsDiv.style.display = "none";
-    
-    // Wait for fade-in to complete before launching confetti
-    setTimeout(() => {
-        launchConfetti();
-    }, FADE_DURATION + 50);
+function handleTerminalNode(node) {
+    const hasYesTarget = node && node.yes_target != null;
+    const hasNoTarget = node && node.no_target != null;
+
+    if (hasYesTarget || hasNoTarget) {
+        buttonsDiv.style.display = "flex";
+
+        if (hasYesTarget) {
+            yesBtn.style.display = "";
+            yesBtn.onclick = () => goTo(node.yes_target);
+        } else {
+            yesBtn.style.display = "none";
+            yesBtn.onclick = null;
+        }
+
+        if (hasNoTarget) {
+            noBtn.style.display = "";
+            noBtn.onclick = () => goTo(node.no_target);
+            activateEvasiveButton();
+        } else {
+            noBtn.style.display = "none";
+            noBtn.onclick = null;
+        }
+    } else {
+        buttonsDiv.style.display = "none";
+    }
+
+    // Wait for fade-in to complete before launching confetti (except ending_no)
+    if (currentNodeId !== "ending_no") {
+        setTimeout(() => {
+            launchConfetti();
+        }, FADE_DURATION + 50);
+    }
 }
 
 /**
@@ -296,12 +318,20 @@ function moveButton() {
     const maxY = containerRect.height - btnHeight - BUTTON_MARGIN;
     
     // Generate random position within safe bounds
-    const randomX = BUTTON_MARGIN + Math.random() * (maxX - BUTTON_MARGIN);
-    const randomY = BUTTON_MARGIN + Math.random() * (maxY - BUTTON_MARGIN);
+    const powerX = Math.random() < 0.5 ? -1 : 1; // Randomly left or right
+    const randomX = BUTTON_MARGIN - Math.random() * (maxX - BUTTON_MARGIN) * powerX;
+    const randomY = BUTTON_MARGIN - Math.random() * (maxY - BUTTON_MARGIN);
     
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const clampedX = Math.min(Math.max(0, randomX), vw - btnWidth);
+    const clampedY = Math.min(Math.max(0, randomY), vh - btnHeight);
+
     // Apply position
     noBtn.classList.add('evasive');
-    noBtn.style.position = "absolute";
+    // noBtn.style.left = `${clampedX}px`;
+    // noBtn.style.top = `${clampedY}px`;
     noBtn.style.left = `${randomX}px`;
     noBtn.style.top = `${randomY}px`;
 }
@@ -348,3 +378,17 @@ if (document.readyState === 'loading') {
 } else {
     initApp();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
